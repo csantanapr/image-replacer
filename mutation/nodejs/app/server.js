@@ -8,6 +8,8 @@ const app = express()
 app.use(bodyParser.json())
 const port = 8443
 
+const IMAGE = process.env.IMAGE || 'quay.io/bitnami/nginx'
+
 const options = {
   cert: fs.readFileSync('/certs/tls.crt'),
   key: fs.readFileSync('/certs/tls.key')
@@ -26,33 +28,10 @@ app.post('/', (req, res) => {
   const object = req.body.request.object
   console.log('#############################################')
   console.log(JSON.stringify(req.body.request, null, 2)) // debug
-  const overrideMap = yaml.load(fs.readFileSync('/config/map.yaml', 'utf8')).map
   console.log(JSON.stringify(overrideMap, null, 2)) // debug
 
   const toPatch = []
-  if (object.kind === 'Application') {
-    for (const gitRepo of overrideMap) {
-      if (object.spec.source && gitRepo.upstreamRepoURL === object.spec.source.repoURL) {
-        // we have a match for replace
-        toPatch.push({ op: 'replace', path: '/spec/source/repoURL', value: gitRepo.originRepoUrL })
-        if (gitRepo.originBranch) {
-          toPatch.push({ op: 'replace', path: '/spec/source/targetRevision', value: gitRepo.originBranch })
-        }
-        break
-      }
-    }
-  } else if (object.kind === 'AppProject') {
-    console.log('got a project')
-    for (const gitRepo of overrideMap) {
-      for (const index in object.spec.sourceRepos) {
-        if (gitRepo.upstreamRepoURL === object.spec.sourceRepos[index]) {
-          // we have a match for replace
-          toPatch.push({ op: 'replace', path: `/spec/sourceRepos/${index}`, value: gitRepo.originRepoUrL })
-          break
-        }
-      }
-    }
-  }
+  toPatch.push({ op: 'replace', path: '/spec/containers/0/image', value: IMAGE})
 
   const review = {
     apiVersion: 'admission.k8s.io/v1',
