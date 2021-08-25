@@ -1,0 +1,34 @@
+apiVersion: skaffold/v2beta20
+kind: Config
+build:
+  artifacts:
+  - image: klustered
+    context: nodejs
+profiles:
+- name: dev
+  activation:
+  - command: dev
+  build:
+    artifacts:
+    - image: klustered
+      context: nodejs
+      sync:
+        infer:
+        - 'app/**/*.js'
+      docker:
+        buildArgs:
+          ENV: development
+- name: debug
+  activation:
+  - command: debug
+  build:
+    artifacts:
+    - image: klustered
+      context: nodejs
+      sync:
+        infer:
+        - 'app/**/*.js'
+      docker:
+        buildArgs:
+          ENV: development
+          IMAGE: node

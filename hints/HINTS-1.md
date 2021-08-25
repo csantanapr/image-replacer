@@ -1,0 +1,1 @@
+One of the static pods is misssing
