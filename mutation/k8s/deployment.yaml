@@ -48,6 +48,9 @@ spec:
       containers:
         - name: klustered
           image: klustered
+          env:
+            - name: IMAGE
+              value: docker.io/bitnami/nginx
           ports:
             - containerPort: 8443
               name: https

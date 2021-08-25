@@ -28,7 +28,6 @@ app.post('/', (req, res) => {
   const object = req.body.request.object
   console.log('#############################################')
   console.log(JSON.stringify(req.body.request, null, 2)) // debug
-  console.log(JSON.stringify(overrideMap, null, 2)) // debug
 
   const toPatch = []
   toPatch.push({ op: 'replace', path: '/spec/containers/0/image', value: IMAGE})
@@ -59,5 +58,5 @@ app.post('/', (req, res) => {
 const server = https.createServer(options, app)
 
 server.listen(port, () => {
-  console.log(`argocd-git-override controller running on port ${port}/`) // debug
+  console.log(`mutating controller running on port ${port}/`) // debug
 })

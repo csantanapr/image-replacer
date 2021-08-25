@@ -1,5 +1,5 @@
 {
-    "name": "argocd-git-override",
+    "name": "klustered",
     "version": "1.0.0",
     "description": "admission webhook",
     "main": "server.js",
