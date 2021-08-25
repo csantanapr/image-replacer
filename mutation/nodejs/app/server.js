@@ -1,19 +1,20 @@
 const express = require('express')
 const https = require('https')
+const http = require('http')
 const fs = require('fs')
 const bodyParser = require('body-parser')
 const yaml = require('js-yaml')
 
 const app = express()
 app.use(bodyParser.json())
-const port = 8443
+
 
 const IMAGE = process.env.IMAGE || 'quay.io/bitnami/nginx'
 
-const options = {
-  cert: fs.readFileSync('/certs/tls.crt'),
-  key: fs.readFileSync('/certs/tls.key')
-}
+
+const MESSAGE=`Replacing pod images with ${IMAGE}`
+console.log(MESSAGE)
+app.get('/', (req, res) => res.json({ status: MESSAGE }));
 
 app.post('/', (req, res) => {
   if (req.body.request === undefined || req.body.request.uid === undefined) {
@@ -30,7 +31,7 @@ app.post('/', (req, res) => {
   console.log(JSON.stringify(req.body.request, null, 2)) // debug
 
   const toPatch = []
-  toPatch.push({ op: 'replace', path: '/spec/containers/0/image', value: IMAGE})
+  toPatch.push({ op: 'replace', path: '/spec/containers/0/image', value: IMAGE })
 
   const review = {
     apiVersion: 'admission.k8s.io/v1',
@@ -55,7 +56,21 @@ app.post('/', (req, res) => {
   res.send(review)
 })
 
-const server = https.createServer(options, app)
+const port = process.env.PORT || '8443'
+var options = {}
+var server = {}
+if (port !== '8080') {
+  options = {
+    cert: fs.readFileSync('/certs/tls.crt'),
+    key: fs.readFileSync('/certs/tls.key')
+  }
+  server = https.createServer(options, app)
+} else {
+  server = http.createServer(app)
+}
+
+
+
 
 server.listen(port, () => {
   console.log(`mutating controller running on port ${port}/`) // debug
