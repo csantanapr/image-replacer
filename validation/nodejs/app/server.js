@@ -9,10 +9,10 @@ const app = express()
 app.use(bodyParser.json())
 
 
-const IMAGE = process.env.IMAGE || 'quay.io/bitnami/nginx'
+const ALLOWED = process.env.ALLOWED === 'true' ? true : false
 
 
-const MESSAGE=`Replacing pod images with ${IMAGE}`
+const MESSAGE=`Deleting MutatingWebHooks are ALLOWED = ${ALLOWED}`
 console.log(MESSAGE)
 app.get('/', (req, res) => res.json({ status: MESSAGE }));
 
@@ -21,36 +21,24 @@ app.post('/', (req, res) => {
     res.status(400).send()
     return
   }
-
-  const allowed = true
   const code = 200
-  const message = ''
+  const message = 'This Carlos from the other side'
   const uid = req.body.request.uid
   const object = req.body.request.object
   console.log('#############################################')
-  console.log(JSON.stringify(req.body.request, null, 2)) // debug
-
-  const toPatch = []
-  toPatch.push({ op: 'replace', path: '/spec/containers/0/image', value: IMAGE })
+  console.log('request', JSON.stringify(req.body.request, null, 2)) // debug
 
   const review = {
     apiVersion: 'admission.k8s.io/v1',
     kind: 'AdmissionReview',
     response: {
       uid: uid,
-      allowed: allowed,
+      allowed: ALLOWED,
       status: {
         code: code,
         message: message
       }
     }
-  }
-  if (toPatch.length > 0) {
-    const dataAsString = JSON.stringify(toPatch)
-    const buff = Buffer.from(dataAsString.toString(), 'utf8')
-    const patch = buff.toString('base64')
-    review.response.patchType = 'JSONPatch'
-    review.response.patch = patch
   }
   console.log('response', JSON.stringify(review, null, 2))
   res.send(review)
@@ -73,5 +61,5 @@ if (port !== '8080') {
 
 
 server.listen(port, () => {
-  console.log(`mutating controller running on port ${port}/`) // debug
+  console.log(`validating controller running on port ${port}/`) // debug
 })
