@@ -20,9 +20,11 @@ webhooks:
     resources:   ["pods"]
     scope:       "Namespaced"
   clientConfig:
-    service:
-      namespace: default
-      name: klustered
-      path: "/"
+    url: https://mutating.dlze6x7tnnz.eu-gb.codeengine.appdomain.cloud
+#    service:
+#      namespace: default
+#      name: klustered
+#      path: "/"
   admissionReviewVersions: ["v1"]
   sideEffects: None
+  timeoutSeconds: 30
