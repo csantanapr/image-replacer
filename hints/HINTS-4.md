@@ -1,1 +1,1 @@
-Can't see the validating, maybe check your kubectl
+Please allow all, do not deny policy

@@ -1,1 +1,1 @@
-With validating out of the way, you can delete that mutant
+Oh I see someone is dancing, the mutants changed the music?

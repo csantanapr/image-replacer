@@ -1,4 +1,3 @@
-
 apiVersion: admissionregistration.k8s.io/v1
 kind: ValidatingWebhookConfiguration
 metadata:
@@ -6,11 +5,16 @@ metadata:
   annotations:
     service.beta.openshift.io/inject-cabundle: "true"
 webhooks:
-- name: dev.cloudnativetoolkit.klustered-validating
+- name: dev.cloudnativetoolkit.validating
   rules:
+  - apiGroups:   ["rbac.authorization.k8s.io"]
+    apiVersions: ["v1"]
+    operations:  ["CREATE","DELETE"]
+    resources:   ["clusterroles"]
+    scope:       "Cluster"
   - apiGroups:   ["admissionregistration.k8s.io"]
     apiVersions: ["v1"]
-    operations:  ["DELETE"]
+    operations:  ["CREATE","UPDATE","DELETE"]
     resources:   ["mutatingwebhookconfigurations"]
     scope:       "Cluster"
   clientConfig:

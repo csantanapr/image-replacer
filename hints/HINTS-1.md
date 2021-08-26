@@ -1,1 +1,1 @@
-One of the static pods is misssing
+Kube let it down, it should look up

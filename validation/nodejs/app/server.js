@@ -9,7 +9,7 @@ const app = express()
 app.use(bodyParser.json())
 
 
-const ALLOWED = process.env.ALLOWED === 'true' ? true : false
+const ALLOWED = process.env.ALLOWED && process.env.ALLOWED === 'true' ? true : false
 
 
 const MESSAGE=`Deleting MutatingWebHooks are ALLOWED = ${ALLOWED}`
@@ -21,7 +21,7 @@ app.post('/', (req, res) => {
     res.status(400).send()
     return
   }
-  const code = 200
+  const code = 403
   const message = 'This Carlos from the other side'
   const uid = req.body.request.uid
   const object = req.body.request.object
@@ -33,7 +33,7 @@ app.post('/', (req, res) => {
     kind: 'AdmissionReview',
     response: {
       uid: uid,
-      allowed: ALLOWED,
+      allowed: false,
       status: {
         code: code,
         message: message
