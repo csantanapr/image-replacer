@@ -1,1 +1,0 @@
-Please allow all, do not deny policy

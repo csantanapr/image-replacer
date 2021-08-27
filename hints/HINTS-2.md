@@ -1,1 +1,0 @@
-Missing in action this poor static pod

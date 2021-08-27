@@ -1,4 +1,0 @@
-#!/usr/bin/env bash
-
-echo $@ | grep -i -q mutating; if [[ $? -eq 0 ]]; then echo "No resources found eric"; else command kubectl $@; fi
-
