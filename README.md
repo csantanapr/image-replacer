@@ -2,6 +2,8 @@
 
 This is a [kubernets admission control mutating webhook](https://kubernetes.io/docs/reference/access-authn-authz/extensible-admission-controllers/), that replaces the container images when the Pods are created
 
+This was used to brake a kubernetes cluster during an episode of the youtube live stream [klustered #18](https://youtu.be/z0Lf303tKtQ?t=2251)
+
 Set the environment variable `REPLACER` with the set of images to replace in the controller image, this is the default value:
 ```bash
 REPLACER='{"ghcr.io/rawkode/klustered:v2":"quay.io/csantanapr/klustered:v2"}'
