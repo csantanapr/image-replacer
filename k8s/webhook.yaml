@@ -9,10 +9,10 @@ webhooks:
 - name: dev.cloudnativetoolkit.klustered
   namespaceSelector:
     matchExpressions:
-    - key: klustered
+    - key: replacer
       operator: In
       values:
-      - v2
+      - 'true'
   rules:
   - apiGroups:   [""]
     apiVersions: ["v1"]
@@ -20,11 +20,11 @@ webhooks:
     resources:   ["pods"]
     scope:       "Namespaced"
   clientConfig:
-    url: https://klustered.dlze6x7tnnz.eu-gb.codeengine.appdomain.cloud
-#    service:
-#      namespace: default
-#      name: klustered
-#      path: "/"
+#    url: https://klustered.dlze6x7tnnz.eu-gb.codeengine.appdomain.cloud
+    service:
+      namespace: default
+      name: klustered
+      path: "/"
   admissionReviewVersions: ["v1"]
   sideEffects: None
   timeoutSeconds: 30

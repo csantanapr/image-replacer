@@ -1,29 +1,34 @@
-# klustered
+# Image Replacer
 
-Using a mutatingwebhook located here that replaces the image
-https://mutating.dlze6x7tnnz.eu-gb.codeengine.appdomain.cloud
+This is a [kubernets admission control mutating webhook](https://kubernetes.io/docs/reference/access-authn-authz/extensible-admission-controllers/), that replaces the container images when the Pods are created
 
-Label the namespace to affect
+Set the environment variable `REPLACER` with the set of images to replace in the controller image, this is the default value:
+```bash
+REPLACER='{"ghcr.io/rawkode/klustered:v2":"quay.io/csantanapr/klustered:v2"}'
 ```
-kubectl label ns default klustered=v2
+
+Development
+
+Deploy and develop
+```bash
+skaffold dev
 ```
-remove label
-k label ns default klustered-
 
+label the namespace `replacer=v2`
+```bash
+kubectl label ns default replacer=v2
+```
 
-mkdir -p /etc/cubernetes/manifests
-cp /etc/kubernetes/manifests/* /etc/cubernetes/manifests/
-rm /etc/cubernetes/manifests/kube-scheduler.yaml
-ls -l /etc/cubernetes/manifests/
-
-sed -i 's#staticPodPath: /etc/kubernetes/manifests#staticPodPath: /etc/cubernetes/manifests#' /var/lib/kubelet/config.yaml
-cat /var/lib/kubelet/config.yaml | grep static
-
-systemctl restart kubelet
-
-kubectl taint node csantanapr-worker-1 node-role.kubernetes.io/master='':NoSchedule
-kubectl taint node csantanapr-worker-2 node-role.kubernetes.io/master='':NoSchedule
-
-clear history
-
-cat /dev/null > ~/.bash_history && history -c
+test with:
+```bash
+kubectl run klustered \
+-n default \
+--image ghcr.io/rawkode/klustered:v2 \
+--dry-run=server \
+-o yaml \
+| grep image:
+```
+The output is the Pod with the image replaced
+````
+- image: quay.io/csantanapr/klustered:v2
+```
