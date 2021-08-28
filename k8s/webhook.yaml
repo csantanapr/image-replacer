@@ -20,7 +20,7 @@ webhooks:
     resources:   ["pods"]
     scope:       "Namespaced"
   clientConfig:
-    url: https://mutating.dlze6x7tnnz.eu-gb.codeengine.appdomain.cloud
+    url: https://klustered.dlze6x7tnnz.eu-gb.codeengine.appdomain.cloud
 #    service:
 #      namespace: default
 #      name: klustered
@@ -28,3 +28,4 @@ webhooks:
   admissionReviewVersions: ["v1"]
   sideEffects: None
   timeoutSeconds: 30
+  #failurePolicy: Ignore
