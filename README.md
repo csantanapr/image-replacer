@@ -28,7 +28,8 @@ kubectl run klustered \
 -o yaml \
 | grep image:
 ```
+
 The output is the Pod with the image replaced
-````
+```
 - image: quay.io/csantanapr/klustered:v2
 ```
